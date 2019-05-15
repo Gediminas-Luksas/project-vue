@@ -1,0 +1,50 @@
+{
+  "posts": [
+    {
+      "id": 22,
+      "author": "Admins",
+      "title": "'Posts Card 2'",
+      "text": "'Some text for posts'",
+      "date": "'Sun Aug, 2019'",
+      "like": 12,
+      "comments": [
+        {
+          "author": "Smith",
+          "text": "'Test for posts'"
+        },
+        {
+          "author": "Tedy",
+          "text": "Comments from Tedy\n"
+        }
+      ]
+    },
+    {
+      "title": "Title ",
+      "text": "Post text for test . 2 ",
+      "comments": [
+        {
+          "author": "admin Admin",
+          "text": "test 5"
+        },
+        {
+          "author": "Tedy",
+          "text": "Post test 6 "
+        }
+      ],
+      "author": "Admin",
+      "id": 24
+    }
+  ],
+  "profiles": [
+    {
+      "id": 1,
+      "name": "Admin",
+      "team": "Postugalija"
+    },
+    {
+      "id": 2,
+      "name": "John",
+      "team": "Olandija"
+    }
+  ]
+}
