@@ -5,7 +5,7 @@
       <i class="fas fa-user" />
       Create Your Account
     </p>
-    <form class="form">
+    <form @submit.prevent="register" class="form">
       <div class="form-group">
         <input type="text" v-model="name" placeholder="Name" required />
       </div>
@@ -18,20 +18,27 @@
           type="password"
           v-model="password"
           placeholder="Password"
-          minlength="4"
+          minlength="6"
         />
       </div>
       <div class="form-group">
-        <input type="password" placeholder="Confirm Password" minlength="4" />
+        <input
+          v-model="password_confirm"
+          type="password"
+          placeholder="Confirm Password"
+          minlength="6"
+        />
       </div>
-      <router-link
-        @click="createUser()"
-        to="/login"
-        type="submit"
-        value="Register"
-        class="btn btn-primary"
-        >Register</router-link
-      >
+      <button class="btn btn-primary" to="/login" type="submit" name="button">
+        Register
+      </button>
+      <!-- <router-link
+          to="/login"
+          type="submit"
+          value="Register"
+          class="btn btn-primary"
+          >Register</router-link
+      >-->
     </form>
     <p class="my-1">
       Already have an account?
@@ -41,28 +48,32 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
 export default {
   data() {
     return {
       name: '',
       email: '',
-      password: ''
+      password: '',
+      password_confirm: '',
+      teamId: ''
     }
   },
-  createUser() {
-    axios
-      .post('http://localhost:3000/register', {
-        name: this.name,
-        email: this.email,
-        password: this.password
-      })
-      .then(response => {
-        response.data
-      })
-      .catch(e => {
-        console.error(e)
-      })
+  methods: {
+    register() {
+      const teamId = Math.floor(Math.random() * 10 + 1)
+      this.$store
+        .dispatch('register', {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          password_confirm: this.password_confirm,
+          teamId: teamId
+        })
+        .then(() => {
+          this.$router.push({ name: 'login' })
+        })
+    }
   }
 }
 </script>

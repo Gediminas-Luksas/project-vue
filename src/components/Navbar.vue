@@ -7,15 +7,26 @@
       </router-link>
     </h1>
     <ul>
-      <router-link to="/dashboard">Dashboard</router-link>
+      <router-link v-if="loggedIn" to="/dashboard">Dashboard</router-link>
       <router-link to="/posts">Posts</router-link>
-      <router-link to="/profiles">Player</router-link>
-      <router-link to="/register">Register</router-link>
-      <router-link to="/login">Login</router-link>
+      <router-link v-if="loggedIn" to="/users">Player</router-link>
+      <router-link v-if="!loggedIn" to="/register">Register</router-link>
+      <router-link v-if="!loggedIn" to="/login">Login</router-link>
+      <a v-else @click="logout">Logout</a>
     </ul>
   </nav>
 </template>
 
 <script>
-export default {}
+import { mapGetters } from 'vuex'
+export default {
+  computed: {
+    ...mapGetters(['loggedIn'])
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+    }
+  }
+}
 </script>

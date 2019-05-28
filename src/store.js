@@ -6,13 +6,36 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    count_like: 0,
     posts: [],
     post: {},
-    profiles: []
+    profiles: [],
+    users: null
   },
   mutations: {
+    SET_USER_DATA(state, userData) {
+      state.users = userData
+      localStorage.setItem('users', JSON.stringify(userData))
+      axios.defaults.headers.common['Authorization'] = `Bearer ${
+        userData.token
+      }`
+    },
+    CLEAR_USERS_DATA() {
+      localStorage.removeItem('users')
+      location.reload()
+    },
+
+    INCREMENT_COUNT(state) {
+      state.count_like += 1
+    },
     SET_POSTS(state, posts) {
       state.posts = posts
+    },
+    UPDATE_POSTS(state, post) {
+      state.post = post
+    },
+    CREATE_POSTS(state, posts) {
+      state.posts.push(posts)
     },
     SET_POST(state, post) {
       state.post = post
@@ -22,9 +45,32 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    register({ commit }, credentials) {
+      return axios
+        .post('http://localhost:51515/register', credentials)
+        .then(({ data }) => {
+          commit('SET_USER_DATA', data)
+        })
+    },
+    login({ commit }, credentials) {
+      return axios
+        .post('http://localhost:51515/login', credentials)
+        .then(({ data }) => {
+          commit('SET_USER_DATA', data)
+        })
+    },
+    logout({ commit }) {
+      commit('CLEAR_USERS_DATA')
+    },
+
+    createPosts({ commit }, posts) {
+      return axios.post('http://localhost:51515/posts', posts).then(() => {
+        commit('CREATE_POSTS', posts)
+      })
+    },
     loadPosts({ commit }) {
       axios
-        .get('http://localhost:3000/posts')
+        .get('http://localhost:51515/posts')
         .then(post => {
           const posts = post.data
           commit('SET_POSTS', posts)
@@ -35,7 +81,7 @@ export default new Vuex.Store({
     },
     loadPostsById({ commit }, id) {
       axios
-        .get('http://localhost:3000/posts/' + id)
+        .get('http://localhost:51515/posts/' + id)
         .then(post => {
           commit('SET_POST', post.data)
         })
@@ -45,7 +91,7 @@ export default new Vuex.Store({
     },
     loadProfiles({ commit }) {
       axios
-        .get('http://localhost:3000/profiles')
+        .get('http://localhost:51515/profiles')
         .then(profile => {
           const profiles = profile.data
           commit('SET_PROFILES', profiles)
@@ -74,6 +120,9 @@ export default new Vuex.Store({
         }
         return profile
       })
+    },
+    loggedIn(state) {
+      return !!state.users
     }
   }
 })

@@ -9,11 +9,11 @@ import Register from './views/Register'
 import Profiles from './views/Profiles'
 import Profile from './views/Profile'
 import Dashboard from './views/Dashboard'
-import NotFoundComponent from './views/NotFoundComponent'
+import Users from './views/Users'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
@@ -54,6 +54,14 @@ export default new Router({
       component: Profiles
     },
     {
+      path: '/users',
+      name: 'users',
+      component: Users,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/profile',
       name: 'profile',
       component: Profile
@@ -65,7 +73,18 @@ export default new Router({
     },
     {
       path: '*',
-      component: NotFoundComponent
+      redirect: '/'
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const logedIn = localStorage.getItem('users')
+
+  if (to.matched.some(record => record.meta.requiresAuth) && !logedIn) {
+    next('/')
+  }
+  next()
+})
+
+export default router

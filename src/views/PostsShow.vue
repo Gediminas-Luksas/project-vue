@@ -15,7 +15,7 @@
       </div>
       <div>
         <h3 class="title">{{ post.title }}</h3>
-        <p class="my-1">{{ post.text }}</p>
+        <p class="my-1">{{ post.body }}</p>
       </div>
     </div>
     <div class="post-form">
@@ -23,15 +23,22 @@
         <h3>Leave A Comment</h3>
       </div>
       <form class="form my-1">
+        <input
+          type="text"
+          v-model="author"
+          name="author"
+          placeholder="Author"
+          class="form-control"
+        />
         <textarea
           cols="30"
           rows="5"
           value="Submit"
-          v-model="postBody"
+          v-model="body"
           placeholder="Comment on this post"
         />
         <input
-          @click="createPost(post.id)"
+          @click="createPost(post._id)"
           type="submit"
           class="btn btn-dark my-1"
         />
@@ -41,7 +48,7 @@
     <div
       v-for="comment in post.comments"
       :key="comment.id"
-      class="post bg-white my-1 p-1 shadow"
+      class="post bg-light my-1 p-1 shadow"
     >
       <div>
         <router-link to="/profile">
@@ -63,6 +70,8 @@
         <button class="btn">
           <i class="fas fa-thumbs-down" />
         </button>
+        <br />
+        <small class="text-muted">Posted on: {{ post.date_posted }}</small>
       </div>
     </div>
   </section>
@@ -75,7 +84,9 @@ export default {
   props: ['id'],
   data() {
     return {
-      postBody: ''
+      body: '',
+      author: '',
+      date_posted: ''
     }
   },
   computed: {
@@ -84,7 +95,8 @@ export default {
     })
   },
   async created() {
-    await this.fetchData(this.id)
+    await this.fetchData(this.id),
+      (this.date_posted = new Date().toLocaleDateString())
   },
   methods: {
     ...mapActions({
@@ -92,12 +104,13 @@ export default {
     }),
     createPost(id) {
       axios
-        .patch('http://localhost:3000/posts/' + id, {
+        .patch('http://localhost:51515/posts/' + id, {
           comments: [
             ...this.post.comments,
             {
-              author: 'Tedy',
-              text: this.postBody
+              author: this.author,
+              text: this.body,
+              date_posted: this.date_posted
             }
           ]
         })

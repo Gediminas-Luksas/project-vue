@@ -205,6 +205,12 @@ img {
   grid-gap: 2rem;
   align-items: center;
 
+  .title {
+    font-size: 2rem;
+  }
+
+  .text-muted {}
+
   &>div:first-child {
     text-align: center;
   }

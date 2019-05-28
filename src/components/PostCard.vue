@@ -13,8 +13,8 @@
 
     <div>
       <p class="title my-1">{{ post.title }}</p>
-      <p class="my-1">{{ post.text }}</p>
-      <button class="btn">
+      <p class="my-1">{{ post.body }}</p>
+      <button @click="incrementCount" class="btn">
         <i class="fas fa-thumbs-up" />
         <span>{{ post.like }}</span>
       </button>
@@ -23,9 +23,11 @@
       </button>
       <router-link
         class="btn btn-primary"
-        :to="{ name: 'posts-show', params: { id: post.id } }"
+        :to="{ name: 'posts-show', params: { id: post._id } }"
         >Comments - {{ post.comments ? post.comments.length : 0 }}</router-link
       >
+      <br />
+      <small class="text-muted">Posted on: {{ post.date_posted }}</small>
     </div>
   </div>
 </template>
@@ -34,6 +36,11 @@
 export default {
   props: {
     post: Object
+  },
+  methods: {
+    incrementCount() {
+      this.$store.commit('INCREMENT_COUNT')
+    }
   }
 }
 </script>

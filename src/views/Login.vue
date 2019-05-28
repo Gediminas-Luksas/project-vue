@@ -7,16 +7,24 @@
       <i class="fas fa-user" />
       Sign Into your account
     </p>
-    <form class="form">
+    <form @submit.prevent="login" class="form">
       <div class="form-group">
-        <input type="email" placeholder="Email Address" required />
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Email Address"
+          required
+        />
       </div>
       <div class="form-group">
-        <input type="password" placeholder="Password" minlength="4" />
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          minlength="4"
+        />
       </div>
-      <router-link to="/dashboard" class="btn btn-primary" type="submit"
-        >Login</router-link
-      >
+      <button class="btn btn-primary" type="submit">Login</button>
     </form>
     <p class="my-1">
       Don`t have an account?
@@ -26,5 +34,24 @@
 </template>
 
 <script>
-export default {}
+export default {
+  data() {
+    return {
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    login() {
+      this.$store
+        .dispatch('login', {
+          email: this.email,
+          password: this.password
+        })
+        .then(() => {
+          this.$router.push({ name: 'users' })
+        })
+    }
+  }
+}
 </script>
